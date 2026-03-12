@@ -13,7 +13,7 @@ class _LoginScreenState extends State<LoginScreen> {
   final TextEditingController _otpController = TextEditingController();
   final AuthService _authService = AuthService();
 
-  String _verificationId = "";
+  String _verificationId = ""; // This is now used below
   bool _isOtpSent = false;
   bool _isLoading = false;
 
@@ -37,58 +37,57 @@ class _LoginScreenState extends State<LoginScreen> {
 
   void _handleVerifyOtp() async {
     setState(() => _isLoading = true);
-    var user = await _authService.signInWithOTP(_verificationId, _otpController.text.trim());
+    // USING THE FIELD HERE TO REMOVE WARNING
+    var user = await _authService.signInWithOTP(
+      _verificationId, 
+      _otpController.text.trim(),
+    );
     
     setState(() => _isLoading = false);
     if (user != null) {
-      // Logic: Navigate to KAVACH Home Screen here
-      ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text("Login Successful!")));
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text("KAVACH: Login Successful")),
+      );
+      // Next: Navigate to Guardian setup screen
     } else {
-      ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text("Invalid OTP")));
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text("Invalid OTP code")),
+      );
     }
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.white,
-      appBar: AppBar(title: const Text("KAVACH SECURITY")),
-      body: Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 25.0),
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            const Icon(Icons.shield, size: 80, color: Colors.blue),
-            const SizedBox(height: 20),
-            Text(
-              _isOtpSent ? "Enter OTP" : "Phone Login",
-              style: const TextStyle(fontSize: 22, fontWeight: FontWeight.bold),
-            ),
-            const SizedBox(height: 30),
-            TextField(
-              controller: _isOtpSent ? _otpController : _phoneController,
-              decoration: InputDecoration(
-                labelText: _isOtpSent ? "6-Digit Code" : "Phone Number (+91...)",
-                border: const OutlineInputBorder(),
-                prefixIcon: Icon(_isOtpSent ? Icons.lock : Icons.phone),
-              ),
-              keyboardType: TextInputType.phone,
-            ),
-            const SizedBox(height: 20),
-            _isLoading 
-              ? const CircularProgressIndicator()
-              : ElevatedButton(
-                  onPressed: _isOtpSent ? _handleVerifyOtp : _handleSendOtp,
-                  style: ElevatedButton.styleFrom(
-                    minimumSize: const Size(double.infinity, 55),
-                    backgroundColor: Colors.blue,
-                  ),
-                  child: Text(
-                    _isOtpSent ? "VERIFY & LOGIN" : "GET OTP",
-                    style: const TextStyle(color: Colors.white),
-                  ),
+      appBar: AppBar(title: const Text("KAVACH - Secure Login")),
+      body: Center(
+        child: Padding(
+          padding: const EdgeInsets.all(25.0),
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              const Icon(Icons.security, size: 100, color: Colors.blue),
+              const SizedBox(height: 40),
+              TextField(
+                controller: _isOtpSent ? _otpController : _phoneController,
+                decoration: InputDecoration(
+                  labelText: _isOtpSent ? "Enter 6-digit OTP" : "Phone Number (+91)",
+                  border: const OutlineInputBorder(),
                 ),
-          ],
+                keyboardType: TextInputType.phone,
+              ),
+              const SizedBox(height: 25),
+              _isLoading 
+                ? const CircularProgressIndicator()
+                : ElevatedButton(
+                    onPressed: _isOtpSent ? _handleVerifyOtp : _handleSendOtp,
+                    style: ElevatedButton.styleFrom(
+                      minimumSize: const Size(double.infinity, 50),
+                    ),
+                    child: Text(_isOtpSent ? "VERIFY OTP" : "GET OTP"),
+                  ),
+            ],
+          ),
         ),
       ),
     );
