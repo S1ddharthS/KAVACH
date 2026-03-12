@@ -14,17 +14,17 @@ class _LoginScreenState extends State<LoginScreen> {
   final TextEditingController _otpController = TextEditingController();
   final AuthService _authService = AuthService();
 
-  String _verificationId = ""; // This is now used below
+  String _verificationId = "";
   bool _isOtpSent = false;
   bool _isLoading = false;
 
   void _handleSendOtp() async {
+    final currentContext = context;
     setState(() => _isLoading = true);
     await _authService.verifyPhoneNumber(
       _phoneController.text.trim(),
       (verId) {
-        // Fix: Check if the widget is still "mounted" before calling setState
-        if (!mounted) return; 
+        if (!mounted) return;
         setState(() {
           _verificationId = verId;
           _isOtpSent = true;
@@ -32,35 +32,27 @@ class _LoginScreenState extends State<LoginScreen> {
         });
       },
       (error) {
-        // Fix: Check if the widget is still "mounted" before showing SnackBar
-        if (!mounted) return; 
+        if (!currentContext.mounted) return;
+        if (!mounted) return;
         setState(() => _isLoading = false);
-        ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(error)));
+        ScaffoldMessenger.of(currentContext).showSnackBar(SnackBar(content: Text(error)));
       },
     );
   }
 
   void _handleVerifyOtp() async {
+    final currentContext = context;
     setState(() => _isLoading = true);
-    var user = await _authService.signInWithOTP(
-      _verificationId, 
-      _otpController.text.trim(),
-    );
+    var user = await _authService.signInWithOTP(_verificationId, _otpController.text.trim());
     
-    // Fix: Check if the widget is still "mounted" before updating UI or Navigating
-    if (!mounted) return; 
-
+    if (!currentContext.mounted) return;
+    if (!mounted) return;
     setState(() => _isLoading = false);
 
     if (user != null) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text("KAVACH: Login Successful")),
-      );
-      
-      // ADD THIS LINE to take the user to the Guardian Setup screen
       Navigator.pushReplacement(
-        context, 
-        MaterialPageRoute(builder: (context) => const GuardianScreen())
+        currentContext,
+        MaterialPageRoute(builder: (context) => const GuardianScreen()),
       );
     }
   }
@@ -68,35 +60,26 @@ class _LoginScreenState extends State<LoginScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: const Text("KAVACH - Secure Login")),
-      body: Center(
-        child: Padding(
-          padding: const EdgeInsets.all(25.0),
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              const Icon(Icons.security, size: 100, color: Colors.blue),
-              const SizedBox(height: 40),
-              TextField(
-                controller: _isOtpSent ? _otpController : _phoneController,
-                decoration: InputDecoration(
-                  labelText: _isOtpSent ? "Enter 6-digit OTP" : "Phone Number (+91)",
-                  border: const OutlineInputBorder(),
-                ),
-                keyboardType: TextInputType.phone,
+      appBar: AppBar(title: const Text("KAVACH FLUTTER LOGIN")),
+      body: Padding(
+        padding: const EdgeInsets.all(25.0),
+        child: Column(
+          children: [
+            TextField(
+              controller: _isOtpSent ? _otpController : _phoneController,
+              decoration: InputDecoration(
+                labelText: _isOtpSent ? "Enter OTP" : "Phone Number",
+                border: const OutlineInputBorder(),
               ),
-              const SizedBox(height: 25),
-              _isLoading 
-                ? const CircularProgressIndicator()
-                : ElevatedButton(
-                    onPressed: _isOtpSent ? _handleVerifyOtp : _handleSendOtp,
-                    style: ElevatedButton.styleFrom(
-                      minimumSize: const Size(double.infinity, 50),
-                    ),
-                    child: Text(_isOtpSent ? "VERIFY OTP" : "GET OTP"),
-                  ),
-            ],
-          ),
+            ),
+            const SizedBox(height: 20),
+            _isLoading 
+              ? const CircularProgressIndicator()
+              : ElevatedButton(
+                  onPressed: _isOtpSent ? _handleVerifyOtp : _handleSendOtp,
+                  child: Text(_isOtpSent ? "VERIFY" : "GET OTP"),
+                ),
+          ],
         ),
       ),
     );

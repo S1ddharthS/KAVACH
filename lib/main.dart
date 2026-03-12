@@ -1,31 +1,23 @@
 import 'package:flutter/material.dart';
 import 'firebase_config.dart';
-import 'login_screen.dart'; // Import your login screen
+import 'login_screen.dart';
 
 void main() async {
-  // Ensure Flutter is initialized before Firebase
   WidgetsFlutterBinding.ensureInitialized();
-  
-  // Connect KAVACH to Firebase
-  await FirebaseConfig.initialize(); 
-  
-  runApp(const MyApp());
+  await FirebaseConfig.initialize();
+  runApp(const KavachApp());
 }
 
-class MyApp extends StatelessWidget {
-  const MyApp({super.key});
+class KavachApp extends StatelessWidget {
+  const KavachApp({super.key});
 
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
+      debugShowCheckedModeBanner: false,
       title: 'KAVACH',
-      debugShowCheckedModeBanner: false, // Removes the red "Debug" banner
-      theme: ThemeData(
-        primarySwatch: Colors.blue,
-        useMaterial3: true, // Uses modern Android/iOS design
-      ),
-      // This tells FLUTTER to show your Login Screen first
-      home: const LoginScreen(), 
+      theme: ThemeData(primarySwatch: Colors.blue, useMaterial3: true),
+      home: const LoginScreen(),
     );
   }
 }

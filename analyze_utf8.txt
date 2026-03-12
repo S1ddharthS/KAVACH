@@ -1,0 +1,4 @@
+﻿Analyzing kavach...                                             
+
+   info - Don't use 'BuildContext's across async gaps, guarded by an unrelated 'mounted' check - lib\login_screen.dart:50:9 - use_build_context_synchronously
+
