@@ -1,0 +1,395 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>KAVACH – UI Design Preview</title>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700;800&family=Roboto:wght@400;500&display=swap" rel="stylesheet"/>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --bg: #0A0F1E;
+      --surface: #111827;
+      --card: #1A2235;
+      --teal: #26A69A;
+      --teal-glow: rgba(38,166,154,0.25);
+      --rose: #EF9A9A;
+      --rose-glow: rgba(239,154,154,0.25);
+      --text: #F0F4FF;
+      --muted: #8898AA;
+      --border: rgba(255,255,255,0.07);
+    }
+
+    body {
+      background: var(--bg);
+      font-family: 'Poppins', sans-serif;
+      color: var(--text);
+      min-height: 100vh;
+    }
+
+    /* ── Header ── */
+    header {
+      text-align: center;
+      padding: 56px 24px 32px;
+      background: linear-gradient(180deg, rgba(38,166,154,0.08) 0%, transparent 100%);
+      border-bottom: 1px solid var(--border);
+    }
+    .logo { display: flex; align-items: center; justify-content: center; gap: 12px; margin-bottom: 12px; }
+    .logo-icon {
+      width: 48px; height: 48px; border-radius: 14px;
+      background: linear-gradient(135deg, var(--teal), #1a7a70);
+      display: flex; align-items: center; justify-content: center;
+      font-size: 24px; box-shadow: 0 4px 20px var(--teal-glow);
+    }
+    h1 { font-size: 32px; font-weight: 800; letter-spacing: -0.5px; }
+    h1 span { color: var(--teal); }
+    .subtitle { font-family: 'Roboto', sans-serif; color: var(--muted); font-size: 15px; margin-top: 6px; }
+
+    /* ── Navigation pills ── */
+    nav {
+      display: flex; justify-content: center; gap: 8px;
+      flex-wrap: wrap; padding: 24px 20px 0;
+    }
+    .nav-pill {
+      padding: 8px 20px; border-radius: 100px;
+      font-family: 'Poppins', sans-serif; font-size: 13px; font-weight: 600;
+      cursor: pointer; border: 1.5px solid var(--border);
+      background: var(--card); color: var(--muted);
+      transition: all 0.2s ease; white-space: nowrap;
+    }
+    .nav-pill:hover { border-color: var(--teal); color: var(--teal); }
+    .nav-pill.active {
+      background: var(--teal); border-color: var(--teal);
+      color: #fff; box-shadow: 0 4px 16px var(--teal-glow);
+    }
+
+    /* ── Stage ── */
+    .stage {
+      display: flex; justify-content: center; align-items: flex-start;
+      padding: 40px 24px 60px; min-height: 600px;
+    }
+
+    /* Phone frame */
+    .phone-frame {
+      position: relative; width: 320px; flex-shrink: 0;
+      filter: drop-shadow(0 32px 64px rgba(0,0,0,0.6));
+    }
+    .phone-shell {
+      background: #1C1C24; border-radius: 44px;
+      padding: 14px; border: 1.5px solid rgba(255,255,255,0.12);
+      box-shadow:
+        inset 0 0 0 1px rgba(255,255,255,0.04),
+        0 0 0 6px rgba(255,255,255,0.03);
+    }
+    .phone-notch {
+      width: 90px; height: 26px; background: #1C1C24;
+      border-radius: 0 0 18px 18px; margin: 0 auto 4px;
+      position: relative; z-index: 2;
+    }
+    .phone-notch::after {
+      content: ''; position: absolute;
+      top: 6px; left: 50%; transform: translateX(-50%);
+      width: 10px; height: 10px; border-radius: 50%; background: #0a0a10;
+    }
+    .phone-screen {
+      border-radius: 30px; overflow: hidden;
+      background: #fff; aspect-ratio: 390/844;
+      position: relative;
+    }
+    .phone-screen img {
+      width: 100%; height: 100%; object-fit: cover;
+      object-position: top; display: block;
+      transition: opacity 0.35s ease;
+    }
+    .phone-screen img.loading { opacity: 0; }
+
+    /* Side buttons */
+    .btn-vol {
+      position: absolute; left: -5px; top: 100px;
+      width: 4px; height: 32px; background: #2a2a35; border-radius: 2px;
+    }
+    .btn-vol + .btn-vol { top: 142px; }
+    .btn-pwr {
+      position: absolute; right: -5px; top: 120px;
+      width: 4px; height: 48px; background: #2a2a35; border-radius: 2px;
+    }
+
+    /* ── Screen info panel ── */
+    .info-panel {
+      margin-left: 48px; padding-top: 40px; max-width: 340px;
+    }
+    .screen-tag {
+      display: inline-block; padding: 4px 12px; border-radius: 100px;
+      font-size: 11px; font-weight: 700; letter-spacing: 1px; text-transform: uppercase;
+      margin-bottom: 16px; background: var(--teal-glow); color: var(--teal);
+      border: 1px solid rgba(38,166,154,0.3);
+    }
+    .screen-tag.danger { background: var(--rose-glow); color: var(--rose); border-color: rgba(239,154,154,0.3); }
+    .screen-tag.dark { background: rgba(71,82,196,0.2); color: #7B6EF6; border-color: rgba(123,110,246,0.3); }
+
+    .info-panel h2 { font-size: 26px; font-weight: 700; margin-bottom: 10px; line-height: 1.2; }
+    .info-panel p { font-family: 'Roboto', sans-serif; font-size: 14px; color: var(--muted); line-height: 1.7; margin-bottom: 24px; }
+
+    .feature-list { display: flex; flex-direction: column; gap: 10px; }
+    .feature-item {
+      display: flex; align-items: center; gap: 10px;
+      font-family: 'Roboto', sans-serif; font-size: 13px; color: #B0BEC5;
+    }
+    .feature-dot {
+      width: 6px; height: 6px; border-radius: 50%;
+      background: var(--teal); flex-shrink: 0;
+    }
+    .feature-dot.rose { background: var(--rose); }
+    .feature-dot.purple { background: #7B6EF6; }
+
+    /* ── All screens strip ── */
+    .all-screens {
+      padding: 0 24px 80px;
+    }
+    .strip-title {
+      text-align: center; font-size: 14px; font-weight: 600;
+      color: var(--muted); letter-spacing: 1px; text-transform: uppercase;
+      margin-bottom: 24px;
+    }
+    .screens-row {
+      display: flex; gap: 16px; overflow-x: auto;
+      padding: 8px 0 20px; scroll-snap-type: x mandatory;
+      -webkit-overflow-scrolling: touch;
+    }
+    .screens-row::-webkit-scrollbar { height: 4px; }
+    .screens-row::-webkit-scrollbar-track { background: var(--surface); }
+    .screens-row::-webkit-scrollbar-thumb { background: var(--teal); border-radius: 2px; }
+
+    .thumb-card {
+      flex-shrink: 0; scroll-snap-align: start;
+      width: 130px; cursor: pointer;
+      transition: transform 0.2s ease;
+    }
+    .thumb-card:hover { transform: translateY(-4px); }
+    .thumb-card.active-thumb .thumb-img-wrap { border-color: var(--teal); box-shadow: 0 0 0 2px var(--teal), 0 8px 24px var(--teal-glow); }
+    .thumb-img-wrap {
+      border-radius: 18px; overflow: hidden; border: 2px solid transparent;
+      background: var(--card); transition: all 0.2s ease;
+    }
+    .thumb-img-wrap img { width: 100%; display: block; }
+    .thumb-label {
+      font-family: 'Roboto', sans-serif; font-size: 11px;
+      color: var(--muted); text-align: center; margin-top: 8px;
+    }
+  </style>
+</head>
+<body>
+
+<!-- ── Header ──────────────────────────────────────────────── -->
+<header>
+  <div class="logo">
+    <div class="logo-icon">🛡️</div>
+    <h1>KA<span>VACH</span></h1>
+  </div>
+  <p class="subtitle">Smart Women's Safety System · UI Design Preview · 7 Screens</p>
+</header>
+
+<!-- ── Nav Pills ────────────────────────────────────────────── -->
+<nav>
+  <button class="nav-pill active" onclick="showScreen(0)">Dashboard</button>
+  <button class="nav-pill" onclick="showScreen(1)">SOS Emergency</button>
+  <button class="nav-pill" onclick="showScreen(2)">Safe Walk Map</button>
+  <button class="nav-pill" onclick="showScreen(3)">Fake Call</button>
+  <button class="nav-pill" onclick="showScreen(4)">Report</button>
+  <button class="nav-pill" onclick="showScreen(5)">Community</button>
+  <button class="nav-pill" onclick="showScreen(6)">Login</button>
+</nav>
+
+<!-- ── Main Stage ────────────────────────────────────────────── -->
+<div class="stage">
+  <div class="phone-frame">
+    <div class="btn-vol"></div>
+    <div class="btn-vol"></div>
+    <div class="btn-pwr"></div>
+    <div class="phone-shell">
+      <div class="phone-notch"></div>
+      <div class="phone-screen">
+        <img id="mainImg" src="" alt="Screen preview" />
+      </div>
+    </div>
+  </div>
+
+  <div class="info-panel" id="infoPanel"></div>
+</div>
+
+<!-- ── All Screens Strip ─────────────────────────────────────── -->
+<div class="all-screens">
+  <p class="strip-title">All Screens</p>
+  <div class="screens-row" id="screensRow"></div>
+</div>
+
+<script>
+  const screens = [
+    {
+      label: "Dashboard",
+      tag: "Home",
+      tagClass: "",
+      title: "Safety Dashboard",
+      desc: "The command center. Instantly access SOS, see your protection status, and navigate to any safety feature in one tap.",
+      features: [
+        { text: "Hero gradient status card with ACTIVE indicator", dot: "" },
+        { text: "80px SOS FAB with pulse ring animation", dot: "" },
+        { text: "Quick-action cards: Safe Walk, Fake Call, Contacts", dot: "" },
+        { text: "Recent activity feed + 4-tab bottom nav", dot: "" },
+      ],
+      img: "https://lh3.googleusercontent.com/aida/AOfcidV0uN7qJ7WLfXn6Gm90dGmn5cviQvPArUyBlW3T-a8v4FY8UHCZNiCv0qRnjybn0aEBwH_P64hAgNALKD1Picm56BSHXItyKHoV30DrhjRWZemqSeIHQG_km2agvSdf2GgPkrYKKZjbvHcKfMdD4tnIK9bx6Q_2Pl9cQ2bp0WV8QCenSH8acPt_jWumliyk3sVmFFD1zt56prmMQ4tFhuaz7rFLjkM49LFekVUGtbhJARkDneWuJuvDJv09"
+    },
+    {
+      label: "SOS",
+      tag: "Emergency",
+      tagClass: "danger",
+      title: "SOS Emergency Screen",
+      desc: "Full-screen emergency trigger. Rose gradient hero zone with 3 pulsing concentric rings, voice activation, and instant contact list.",
+      features: [
+        { text: "120px SOS circle with 3 concentric pulse rings", dot: "rose" },
+        { text: "Hold 3 seconds or shake to trigger", dot: "rose" },
+        { text: "Voice activation — Say 'HELP ME'", dot: "rose" },
+        { text: "One-tap call buttons for emergency contacts", dot: "" },
+      ],
+      img: "https://lh3.googleusercontent.com/aida/AOfcidWCthMWH4Qp65Jdih1iWaqHpH4QA-F39Os-PMSBCGuxC9F0SWOjpwojzaj7nU0iW6vAF8J3lLZsCKIShu6BOua3028ZwerkDFpDyTdKevo7Y8IEjr5YeP6tf8j_8ROwCXq7wxAeJzNs1NiGSM_4AhQh5aHbxPlnctOy5REttbjNSQitnBmMGCIgY1HbeJ7hRCrEcwjc7w47DEfhoyCoKKcvnIg6aWG2TYKLQ9IVolEFcI2_bJX7sg9lreUV"
+    },
+    {
+      label: "Safe Walk",
+      tag: "Map",
+      tagClass: "",
+      title: "Safe Walk Map",
+      desc: "Full-bleed minimal map with live location, countdown timer, and orange community incident markers. One tap to confirm you're safe.",
+      features: [
+        { text: "Full-bleed light basemap with teal location marker", dot: "" },
+        { text: "Floating countdown timer card with progress bar", dot: "" },
+        { text: "I'M SAFE + EXTEND TIME action buttons", dot: "" },
+        { text: "Orange community incident markers on map", dot: "rose" },
+      ],
+      img: "https://lh3.googleusercontent.com/aida/AOfcidWLWpQTGJDB3hUSD6oaFtRF1V3zkCwqnWNiV_tSWpZEQNTLm6XFyMl49qvfMvqVmZZbvwuZvWsGzS8UUxkulMO1h1cL2vS7YkcGrUJR5OwNVhxa7QOSwx6hXVBNYjx6F4u1dC1kXHjkDHCLt8qsOiNTtm2Vx6keHqyCo6927kiIe8em-77WN5OMK4kZOTiajmmbpTpU3Cs8B2ZjIXCSB_SheUL7fEwPOOrNrIJ3S68-7Znx72hazKPaA7xA"
+    },
+    {
+      label: "Fake Call",
+      tag: "Dark UI",
+      tagClass: "dark",
+      title: "Fake Call Screen",
+      desc: "Deep navy immersive call simulation. Realistic incoming call UI with glowing avatar, controls, and accept/decline buttons to exit danger.",
+      features: [
+        { text: "Deep navy #0A2540 full-screen dark mode", dot: "purple" },
+        { text: "96px caller avatar with teal glow border", dot: "" },
+        { text: "In-call controls: Mute, Speaker, Hold, Keypad", dot: "" },
+        { text: "Accept (green) + Decline (rose) action buttons", dot: "rose" },
+      ],
+      img: "https://lh3.googleusercontent.com/aida/AOfcidW7D2o8bE9koOIRBYNrkdlxH99mVzNDqQ9h_vWt9cXkQMM_IAxyIVM1mGz6vbhXQwLXn5WKgx7amSJ3DFRJnP_vIB26ksk8IvKWyCwUiRJ0ZaR06brDBb8xe92mOJI4qLpzc5tInYuRw9xECxz9oBNgKk-5ZNmeRDvshkXSVosusaZ1FLfxX3U1tIL2k7TCef1nbOL76za1BqOTQMrWdbPKwb9lSSj-EsgKYOhZrMqto13hnKQGD_KXKEQ"
+    },
+    {
+      label: "Report",
+      tag: "Form",
+      tagClass: "",
+      title: "Report Incident",
+      desc: "Minimal, friction-free incident reporting. Photo upload, incident type, auto-detected location, and anonymous submission.",
+      features: [
+        { text: "Dashed photo upload zone with camera icon", dot: "" },
+        { text: "Incident type dropdown + description textarea", dot: "" },
+        { text: "Auto-detected location field with teal pin", dot: "" },
+        { text: "Green SUBMIT REPORT pill — your report is anonymous", dot: "" },
+      ],
+      img: "https://lh3.googleusercontent.com/aida/AOfcidWkzoRP_yeKEPza4xKkwapERCjsRioT11C3FWuwbo_NeH6VY911mgiRu8QcGrV4ei6c-8SN6DqTAhvxDpTjgjqpJ_fy1-OSGnOJOk8h1_do2YorUl6ZhfQdaw1IspWSCVglzxRejjFEidE0w3BEwpZEewqLGENyMhn5D2h3b0EQSpwVS1zXpAc7Ouk393-jF0W7LNcJcVyax5nlN9fr7MCQYMBcFddve5jdqShcmsEPrToBxNpPZzLvPNOs"
+    },
+    {
+      label: "Community",
+      tag: "Feed",
+      tagClass: "",
+      title: "Community Safety Feed",
+      desc: "Card-based community incident feed with Nearby/Recent filters, image thumbnails, location tags, and color-coded status labels.",
+      features: [
+        { text: "Active teal filter pills: Nearby / Recent / All", dot: "" },
+        { text: "Card with image thumb + location + incident type", dot: "" },
+        { text: "Distance + time metadata on every card", dot: "" },
+        { text: "Color-coded status: Resolved shown in green", dot: "" },
+      ],
+      img: "https://lh3.googleusercontent.com/aida/AOfcidUXMPl9Avju9_Ss30y8JmVl0JLXQvm9ywu_dTNxGLJpQyQ3wM1_zjCwXJ3TASizLjcUiGS1IDCkXCQ6W1a3HZdDG_FnpDPDPKsDVIWeJuU_7FU6xJsAgrkBW9_U-ODgMG7pphICI6wOKRPvRag66qpCEt2bZPmyQ-KdT4v2toCC_vTRwxrcgg1yci1PnQEEXMZSiJfXYjGPcBdqmD-PVG7byjtzisSjZOCb8YsB1BXv3s8iQ43_cDi5B2A"
+    },
+    {
+      label: "Login",
+      tag: "Onboarding",
+      tagClass: "",
+      title: "Login / OTP Screen",
+      desc: "Clean OTP login with country code selector, teal pill CTA, and a 3-icon feature strip introducing Safety Alerts, Live Location, and Voice SOS.",
+      features: [
+        { text: "KAVACH shield logo + gradient blob accent", dot: "" },
+        { text: "Country code pill + phone number input row", dot: "" },
+        { text: "Teal SEND OTP pill button with glow shadow", dot: "" },
+        { text: "3-icon feature strip at bottom for onboarding", dot: "" },
+      ],
+      img: "https://lh3.googleusercontent.com/aida/AOfcidVLH934n0UzDDt983qv3yKXIGsKyg4J4xECIuyDDFc0kW9VSMOSWmUX2Y0Y_qoOHp2Rpc1JSVgKjKGIj8uvu4HDS5D4-U_B12W815LqxJPyb6jS4rTWxgnqXnth_IL_Vqri295zuCqDzVq5-ONztZ5O1_AE-PBlZa2uiBtaf6m4t3gBcjylkDlgAQ-mH2C7kDvoL__5sRJ270QZWWPH3eKusej_qARiMe4cDzGWypsUP8sGqUKnsh6x_a4"
+    },
+  ];
+
+  let current = 0;
+
+  function buildThumbs() {
+    const row = document.getElementById('screensRow');
+    screens.forEach((s, i) => {
+      const card = document.createElement('div');
+      card.className = 'thumb-card' + (i === 0 ? ' active-thumb' : '');
+      card.id = 'thumb-' + i;
+      card.onclick = () => showScreen(i);
+      card.innerHTML = `
+        <div class="thumb-img-wrap">
+          <img src="${s.img}" alt="${s.label}" loading="lazy" />
+        </div>
+        <div class="thumb-label">${s.label}</div>
+      `;
+      row.appendChild(card);
+    });
+  }
+
+  function showScreen(idx) {
+    current = idx;
+    const s = screens[idx];
+
+    // Update main image
+    const img = document.getElementById('mainImg');
+    img.classList.add('loading');
+    const tmp = new Image();
+    tmp.onload = () => { img.src = s.img; img.classList.remove('loading'); };
+    tmp.src = s.img;
+
+    // Update info panel
+    const featureHTML = s.features.map(f =>
+      `<div class="feature-item"><div class="feature-dot ${f.dot}"></div>${f.text}</div>`
+    ).join('');
+    document.getElementById('infoPanel').innerHTML = `
+      <div class="screen-tag ${s.tagClass}">${s.tag}</div>
+      <h2>${s.title}</h2>
+      <p>${s.desc}</p>
+      <div class="feature-list">${featureHTML}</div>
+    `;
+
+    // Update nav pills
+    document.querySelectorAll('.nav-pill').forEach((p, i) => {
+      p.classList.toggle('active', i === idx);
+    });
+
+    // Update thumbs
+    document.querySelectorAll('.thumb-card').forEach((c, i) => {
+      c.classList.toggle('active-thumb', i === idx);
+    });
+
+    // Scroll thumb into view
+    document.getElementById('thumb-' + idx)?.scrollIntoView({ behavior: 'smooth', block: 'nearest', inline: 'center' });
+  }
+
+  // Init
+  buildThumbs();
+  showScreen(0);
+
+  // Keyboard navigation
+  document.addEventListener('keydown', e => {
+    if (e.key === 'ArrowRight') showScreen((current + 1) % screens.length);
+    if (e.key === 'ArrowLeft') showScreen((current - 1 + screens.length) % screens.length);
+  });
+</script>
+</body>
+</html>
