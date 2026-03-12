@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'auth_service.dart';
+import 'guardian_screen.dart';
 
 class LoginScreen extends StatefulWidget {
   const LoginScreen({super.key});
@@ -22,6 +23,8 @@ class _LoginScreenState extends State<LoginScreen> {
     await _authService.verifyPhoneNumber(
       _phoneController.text.trim(),
       (verId) {
+        // Fix: Check if the widget is still "mounted" before calling setState
+        if (!mounted) return; 
         setState(() {
           _verificationId = verId;
           _isOtpSent = true;
@@ -29,6 +32,8 @@ class _LoginScreenState extends State<LoginScreen> {
         });
       },
       (error) {
+        // Fix: Check if the widget is still "mounted" before showing SnackBar
+        if (!mounted) return; 
         setState(() => _isLoading = false);
         ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(error)));
       },
@@ -37,21 +42,25 @@ class _LoginScreenState extends State<LoginScreen> {
 
   void _handleVerifyOtp() async {
     setState(() => _isLoading = true);
-    // USING THE FIELD HERE TO REMOVE WARNING
     var user = await _authService.signInWithOTP(
       _verificationId, 
       _otpController.text.trim(),
     );
     
+    // Fix: Check if the widget is still "mounted" before updating UI or Navigating
+    if (!mounted) return; 
+
     setState(() => _isLoading = false);
+
     if (user != null) {
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(content: Text("KAVACH: Login Successful")),
       );
-      // Next: Navigate to Guardian setup screen
-    } else {
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text("Invalid OTP code")),
+      
+      // ADD THIS LINE to take the user to the Guardian Setup screen
+      Navigator.pushReplacement(
+        context, 
+        MaterialPageRoute(builder: (context) => const GuardianScreen())
       );
     }
   }
